@@ -1,0 +1,105 @@
+<!doctype html>
+<html>
+    <head>
+        <!--Aframe-->
+        <script src="https://aframe.io/releases/1.0.4/aframe.min.js"></script>
+        
+         <!--AR.js-->
+        <script src="https://raw.githack.com/AR-js-org/AR.js/master/aframe/build/aframe-ar.js"></script>
+       
+        <!--追加のロード機能-->
+        <script src="https://raw.githack.com/donmccurdy/aframe-extras/master/dist/aframe-extras.loaders.min.js"></script>
+       
+        <!--ジェスチャー制御-->
+        <script src="https://raw.githack.com/AR-js-org/studio-backend/master/src/modules/marker/tools/gesture-detector.js"></script>
+        <script src="https://raw.githack.com/AR-js-org/studio-backend/master/src/modules/marker/tools/gesture-handler.js"></script>
+    </head>
+
+    <body style="margin: 0; overflow: hidden;">
+       
+       <!--A-Frameシーンの定義-->
+        <a-scene
+            vr-mode-ui="enabled: false;"
+            loading-screen="enabled: false;"
+            renderer="logarithmicDepthBuffer: true;"
+            arjs="trackingMethod: best; sourceType: webcam; debugUIEnabled: false;"
+            id="scene"
+            embedded
+            gesture-detector
+        >
+
+         <!--モデル-->
+            <a-assets>
+                <a-asset-item
+                    id="animated-asset"
+                    src="assets/BlueCube.glb"
+                ></a-asset-item>
+            </a-assets>
+
+            <!--マーカー-->
+            <a-marker
+                id="animated-marker"
+                type="pattern"
+                preset="custom"
+                url="assets/marker.patt"
+                raycaster="objects: .clickable"
+                emitevents="true"
+                cursor="fuse: false; rayOrigin: mouse;"
+                id="Marker"
+            >
+                <a-entity
+                    id="bowser-model"
+                    scale="1 1 1"
+                    gltf-model="#animated-asset"
+                    class="clickable"
+                    gesture-handler
+                    position="0 0 0"
+                ></a-entity>
+            </a-marker>
+
+            <a-entity camera></a-entity>
+        </a-scene>
+
+        <!-- Controls for adjusting position -->
+        <div style="position: absolute; top: 10px; left: 10px;">
+            <label for="x">X:</label>
+            <input type="range" id="x" min="-5" max="5" step="0.1" value="0">
+            <label for="y">Y:</label>
+            <input type="range" id="y" min="-5" max="5" step="0.1" value="0">
+            <label for="z">Z:</label>
+            <input type="range" id="z" min="-5" max="5" step="0.1" value="0">
+        </div>
+
+        <script>
+            // JavaScript to adjust position
+            const model = document.querySelector('#bowser-model');
+            const xInput = document.querySelector('#x');
+            const yInput = document.querySelector('#y');
+            const zInput = document.querySelector('#z');
+
+            function updatePosition() {
+                model.setAttribute('position', `${xInput.value} ${yInput.value} ${zInput.value}`);
+            }
+
+            xInput.addEventListener('input', updatePosition);
+            yInput.addEventListener('input', updatePosition);
+            zInput.addEventListener('input', updatePosition);
+
+            // Fix model position when marker is lost
+            const marker = document.querySelector('#animated-marker');
+            let modelPosition = null;
+
+            marker.addEventListener('markerFound', () => {
+                // Record model's position when marker is found
+                modelPosition = model.getAttribute('position');
+            });
+
+            marker.addEventListener('markerLost', () => {
+                if (modelPosition) {
+                    // Fix model's position when marker is lost
+                    model.setAttribute('position', modelPosition);
+                }
+            });
+        </script>
+    </body>
+</html>
