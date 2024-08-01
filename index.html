@@ -19,27 +19,56 @@
             gesture-detector
         >
             <a-assets>
+                <!-- item1 -->
                 <a-asset-item
-                    id="animated-asset"
-                    src="assets/asset.glb"
+                    id="item1"
+                    src="assets/RedCube.glb"
+                ></a-asset-item>
+
+                <!-- item2 -->
+                  <a-asset-item
+                    id="item2"
+                    src="assets/BlueCube.glb"
                 ></a-asset-item>
             </a-assets>
 
+            <!-- marker1 -->
             <a-marker
-                id="animated-marker"
+                id="marker1"
                 type="pattern"
                 preset="custom"
                 url="assets/marker1.patt"
                 raycaster="objects: .clickable"
                 emitevents="true"
                 cursor="fuse: false; rayOrigin: mouse;"
-                id="markerA"
+                id="marker1"
             >
                 <a-entity
-                    id="bowser-model"
+                    id="entityl"
                     scale="1 1 1"
                     animation-mixer="loop: repeat"
-                    gltf-model="#animated-asset"
+                    gltf-model="#item1"
+                    class="clickable"
+                    gesture-handler
+                ></a-entity>
+            </a-marker>
+
+            <!-- marker2 -->
+            <a-marker
+                id="marker2"
+                type="pattern"
+                preset="custom"
+                url="assets/marker2.patt"
+                raycaster="objects: .clickable"
+                emitevents="true"
+                cursor="fuse: false; rayOrigin: mouse;"
+                id="marker1"
+            >
+                <a-entity
+                    id="entity2"
+                    scale="1 1 1"
+                    animation-mixer="loop: repeat"
+                    gltf-model="#item2"
                     class="clickable"
                     gesture-handler
                 ></a-entity>
